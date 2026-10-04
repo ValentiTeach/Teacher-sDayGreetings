@@ -108,6 +108,49 @@ video:focus-visible { outline: 3px solid var(--ochre); outline-offset: 3px; }
   to { transform: translateX(26px) rotate(var(--r2)); }
 }
 
+/* квіти на столі навколо книги */
+.flora {
+  position: absolute;
+  width: clamp(130px, 17vw, 280px);
+  height: clamp(130px, 17vw, 280px);
+  transform: translate(calc(var(--px, 0) * var(--depth) * 1px), calc(var(--py, 0) * var(--depth) * 1px));
+  transition: transform .6s ease-out;
+}
+
+.flora svg {
+  position: absolute;
+  overflow: visible;
+  filter: drop-shadow(0 6px 8px rgba(90, 55, 10, .22));
+  animation: fl-sway 6s ease-in-out infinite alternate;
+  transform-origin: 50% 80%;
+}
+
+.flora__a { width: 62%; height: 62%; left: 18%; top: 18%; }
+.flora__b { width: 44%; height: 44%; left: 52%; top: 50%; animation-delay: -2s !important; }
+.flora__c { width: 40%; height: 40%; left: 0; top: 56%; animation-delay: -4s !important; }
+
+.flora--tl { left: -4vw; top: -5vh; }
+.flora--tr { right: -3vw; top: -4vh; transform-origin: center; }
+.flora--tr .flora__a { transform: rotate(160deg); animation: none; }
+.flora--bl { left: -3vw; bottom: -6vh; }
+.flora--br { right: -4vw; bottom: -5vh; }
+
+/* квіти, «посаджені» кліком по столу */
+.garden { position: absolute; inset: 0; }
+
+.planted {
+  position: absolute;
+  width: var(--s);
+  height: var(--s);
+  margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2);
+  animation: plant-in .9s cubic-bezier(.3, 1.5, .5, 1) both, plant-out 1.2s ease-in 9s forwards;
+}
+
+.planted svg { display: block; width: 100%; height: 100%; filter: drop-shadow(0 4px 5px rgba(90, 55, 10, .25)); }
+
+@keyframes plant-in { from { transform: scale(0) rotate(-120deg); } to { transform: scale(1) rotate(var(--r, 0deg)); } }
+@keyframes plant-out { to { opacity: 0; transform: scale(.6) rotate(var(--r, 0deg)) translateY(30px); } }
+
 /* ---------- Каркас ---------- */
 
 .app {
@@ -1349,6 +1392,111 @@ video:focus-visible { outline: 3px solid var(--ochre); outline-offset: 3px; }
   text-shadow: 0 1px 0 rgba(255, 238, 190, .75), 0 -1px 0 rgba(90, 50, 5, .22);
 }
 
+/* обкладинка: букет ліворуч, текст праворуч */
+.cover__emblem { display: none; }
+.cover__frame { flex-direction: row; gap: 3cqw; padding: 2.5% 4% 2.5% 2%; }
+
+.cover__art {
+  flex: 0 0 40%;
+  align-self: stretch;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+}
+
+.cover__text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.3cqh;
+  min-width: 0;
+}
+
+.bouquet {
+  width: 100%;
+  height: 100%;
+  max-height: 86cqh;
+  overflow: visible;
+  filter: drop-shadow(0 1.4cqh 1.6cqh rgba(90, 50, 5, .35));
+}
+
+.bouquet__paper-back { fill: #e9d3a6; stroke: #c9a66a; stroke-width: 1.2; }
+.bouquet__paper { fill: #d8b57a; stroke: #b08a4c; stroke-width: 1.2; }
+.bouquet__fold { fill: none; stroke: rgba(120, 80, 30, .28); stroke-width: 1.4; }
+.bouquet__stems { fill: none; stroke: #6f7a2e; stroke-width: 2.4; stroke-linecap: round; }
+.bouquet__bow { fill: #b4532a; stroke: #8f3d1c; stroke-width: 1; }
+
+/* кожна квітка гойдається і реагує на дотик */
+.fl {
+  transform-box: fill-box;
+  transform-origin: 50% 90%;
+  animation: fl-sway 5s ease-in-out var(--d, 0s) infinite alternate;
+  cursor: pointer;
+}
+
+.fl:hover { animation: fl-wiggle .7s ease-in-out; }
+.fl.is-bloom { animation: fl-bloom .8s cubic-bezier(.3, 1.6, .5, 1); }
+
+@keyframes fl-sway { from { transform: rotate(-2.2deg); } to { transform: rotate(2.2deg); } }
+@keyframes fl-wiggle {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(-7deg); }
+  60% { transform: rotate(6deg); }
+}
+@keyframes fl-bloom {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.22) rotate(8deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+.cover__corner {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 5px rgba(90, 50, 5, .3));
+}
+
+.cover__corner--tr { top: -1cqh; right: 1cqw; width: 22cqh; height: 22cqh; transform: rotate(200deg); }
+.cover__corner--bl { bottom: 2cqh; left: 5.5cqw; width: 13cqh; height: 13cqh; opacity: .95; }
+
+/* відблиск і нахил закритої книги за курсором */
+.cover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--gx, 30%) var(--gy, 20%), rgba(255, 250, 225, .32), rgba(255, 250, 225, 0) 42%);
+  mix-blend-mode: soft-light;
+}
+
+.book.is-closed {
+  transform: perspective(1800px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform .25s ease-out;
+}
+
+.book { transition: transform .5s ease; }
+
+@container book (max-aspect-ratio: 1/1) {
+  .cover__frame { flex-direction: column; gap: 1.6cqh; padding: 4% 4%; }
+  .cover .cover__art { display: block; flex: none; height: 36%; width: 100%; align-self: center; }
+  .cover .cover__text { flex: 1 1 0; min-height: 0; }
+  .cover .bouquet { height: 100%; width: 100%; }
+  .cover .cover__text { gap: 1.5cqh; }
+  .cover .cover__title { font-size: clamp(30px, 8.2cqh, 80px); }
+  .cover .label__line { font-size: clamp(18px, 4.2cqh, 40px); }
+  .cover .label { padding: 1.4cqh 3cqh 1.6cqh; }
+  .cover .cover__hint { display: none; }
+  .cover__corner--tr { width: 16cqh; height: 16cqh; }
+  .cover__corner--bl { display: none; }
+}
+
+@container book (max-height: 420px) {
+  .cover__corner { display: none; }
+}
+
 /* наклейка, як на шкільному зошиті */
 .label {
   position: relative;
@@ -1679,5 +1827,8 @@ video:focus-visible { outline: 3px solid var(--ochre); outline-offset: 3px; }
   .book__ribbon { animation: none; }
   .leaves { display: none; }
   .btn--open,
-  .gpill { animation: none; }
+  .gpill,
+  .fl,
+  .flora svg { animation: none; }
+  .book.is-closed { transform: none; }
 }
