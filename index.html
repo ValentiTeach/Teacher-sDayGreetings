@@ -185,6 +185,7 @@
       <symbol id="u-play" viewBox="0 0 24 24"><path fill="currentColor" d="M8 5.2v13.6a.8.8 0 0 0 1.2.7l10.6-6.8a.8.8 0 0 0 0-1.4L9.2 4.5A.8.8 0 0 0 8 5.2z"/></symbol>
       <symbol id="u-replay" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4.5 4v4.5H9"/></symbol>
       <symbol id="u-rotate" viewBox="0 0 24 24"><rect x="3" y="10" width="18" height="10.5" rx="2"/><path d="M17.5 13.5v4M7 5.6a7.6 7.6 0 0 1 10.4.9"/><path d="M17.9 3.4l-.4 3.3-3.3-.4"/></symbol>
+    <symbol id="u-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
     <symbol id="u-sound" viewBox="0 0 24 24"><path d="M3.5 9.5h3.4L11.5 6v12l-4.6-3.5H3.5z"/><path d="M15 9.2a4 4 0 0 1 0 5.6M17.8 6.6a7.6 7.6 0 0 1 0 10.8"/></symbol>
       <symbol id="u-pencil" viewBox="0 0 64 16">
         <path fill="#F2C14E" stroke="none" d="M10 2h40v12H10z"/>
@@ -223,12 +224,16 @@
           <!-- Форзац наприкінці книги: подяка -->
           <section class="sheet endpaper" data-face="4" aria-label="Подяка">
             <div class="endcard">
-              <div class="grade" aria-hidden="true"><span>12</span></div>
+              <div class="grade" aria-hidden="true" title="Найвища оцінка!"><span>12</span></div>
               <p class="grade__note" aria-hidden="true">найкращим учителям!</p>
               <svg class="endcard__leaf" aria-hidden="true"><use href="#leaf-maple"/></svg>
               <h2 class="endcard__title">Дякуємо вам!</h2>
               <p class="endcard__text">За кожен урок, за мудрість, терпіння та щире серце. Нехай ця осінь буде теплою, а кожен день — сповненим радості!</p>
               <p class="endcard__sign">З Днем учителя! З любов’ю — ваш 5-В</p>
+              <div class="thanks">
+                <p class="thanks__tip" id="thanksTip" aria-live="polite">Натисніть на іконку — скажіть «дякую» кожному предмету</p>
+                <div class="thanks__icons" id="thanksIcons"></div>
+              </div>
               <button class="btn btn--ghost" type="button" id="replayBtn">
                 <svg class="ico" aria-hidden="true"><use href="#u-replay"/></svg>
                 Переглянути ще раз
@@ -271,7 +276,8 @@
             <section class="face face--front page page--gallery paper paper--album" data-face="2" aria-label="Сторінка 2: галерея вчителів">
               <header class="page__head">
                 <h2 class="page__title">Наші вчителі</h2>
-                <p class="page__sub">галерея тих, хто щодня відкриває нам світ</p>
+                <p class="page__sub" id="ttCaption">галерея тих, хто щодня відкриває нам світ</p>
+                <nav class="timetable" id="timetable" aria-label="Розклад: перейти до вчителя"></nav>
               </header>
               <div class="gallery" id="gallery">
                 <div class="gallery__wall" id="wall">
@@ -298,6 +304,18 @@
                 <div class="gbtns">
                   <button class="gbtn" type="button" id="gPause" aria-label="Пауза"><svg class="ico" aria-hidden="true"><use href="#u-pause"/></svg></button>
                   <button class="gbtn" type="button" id="gMute" aria-label="Вимкнути музику"><svg class="ico" aria-hidden="true"><use href="#u-music"/></svg></button>
+                </div>
+                <div class="zoom" id="zoom" role="dialog" aria-modal="true" aria-label="Фото вчителя">
+                  <figure class="zoom__card">
+                    <div class="zoom__frame"><img class="zoom__img" id="zoomImg" alt=""></div>
+                    <figcaption class="zoom__label">
+                      <span class="zoom__icons" id="zoomIcons"></span>
+                      <span class="zoom__role" id="zoomRole"></span>
+                      <span class="zoom__note" id="zoomNote"></span>
+                      <span class="zoom__tip" id="zoomTip" aria-live="polite"></span>
+                    </figcaption>
+                  </figure>
+                  <button class="zoom__close" type="button" aria-label="Закрити"><svg class="ico" aria-hidden="true"><use href="#u-close"/></svg></button>
                 </div>
                 <button class="gpill" type="button" id="gMusicHint">
                   <svg class="ico" aria-hidden="true"><use href="#u-music"/></svg>
