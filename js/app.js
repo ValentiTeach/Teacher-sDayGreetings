@@ -243,7 +243,17 @@
   }
 
   /* ---------- Відео ---------- */
+  /* якщо файл відео пошкоджений — не зависаємо, а гортаємо далі */
+  function skipBroken(v) {
+    if (v === video1 && state.page === 1) showNote(note1, CONFIG.pauseAfterVideo1, () => goTo(2));
+    else if (v === video2 && state.page === 3) showNote(note3, CONFIG.pauseAfterVideo2, () => goTo(LAST));
+  }
+
   function playVideo(v) {
+    if (v.error) {
+      skipBroken(v);
+      return;
+    }
     if (v.ended) v.currentTime = 0;
     const p = v.play();
     if (p && p.catch) p.catch(() => syncOverlay(v));
@@ -263,6 +273,8 @@
       playVideo(v);
     });
   });
+
+  [video1, video2].forEach((v) => v.addEventListener('error', () => skipBroken(v)));
 
   video1.addEventListener('ended', () => {
     if (state.page === 1) showNote(note1, CONFIG.pauseAfterVideo1, () => goTo(2));
