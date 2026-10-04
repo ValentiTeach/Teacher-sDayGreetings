@@ -24,7 +24,7 @@
     { photo: 'photo/1.jpg',   role: 'Директор ліцею',       icons: ['i-helm', 'i-school'] },
     { photo: 'photo/2.jpg',   role: 'Класний керівник 5-В', note: 'Історія', icons: ['i-class', 'i-history'] },
     { photo: 'photo/3.jpg',   role: 'Асистент вчителя',     note: 'Інклюзивне навчання', icons: ['i-care', 'i-together'] },
-    { photo: 'photo/4.png',   role: 'Природознавство',      icons: ['i-sprout', 'i-magnifier'] },
+    { photo: 'photo/4.png',   role: 'Пізнаємо природу та ЗБД',      icons: ['i-sprout', 'i-magnifier'] },
     { photo: 'photo/5.jpg',   role: 'Математика',           icons: ['i-math', 'i-compass'] },
     { photo: 'photo/6.png',   role: 'Польська мова',        icons: ['i-say-pl', 'i-flag-pl'] },
     { photo: 'photo/7.jpg',   role: 'Польська мова',        icons: ['i-say-pl', 'i-flag-pl'] },
