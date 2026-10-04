@@ -313,7 +313,7 @@
   const LEAF_COLORS = ['#E0A526', '#F2C14E', '#D9772B', '#B4532A', '#C4472D', '#E8B04A', '#A8742A'];
 
   /* ---------- Листочки-«конфеті» з точки натискання ---------- */
-  function leafPop(x, y, count) {
+  function leafPop(x, y, count, color) {
     if (reduceMotion.matches) return;
     for (let i = 0; i < (count || 8); i++) {
       const el = document.createElement('div');
@@ -327,9 +327,11 @@
         '--dy:' + (Math.sin(angle) * dist + 40).toFixed(0) + 'px',
         '--r:' + rand(-260, 260).toFixed(0) + 'deg',
         '--s:' + rand(12, 22).toFixed(0) + 'px',
-        'color:' + LEAF_COLORS[i % LEAF_COLORS.length],
+        'color:' + (color && i % 3 ? color : LEAF_COLORS[i % LEAF_COLORS.length]),
       ].join(';');
-      el.innerHTML = '<svg viewBox="0 0 100 100"><use href="#' + (i % 3 ? 'leaf-maple' : 'leaf-oval') + '"/></svg>';
+      el.innerHTML = color && i % 3
+        ? '<svg viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="18" ry="42" fill="currentColor"/></svg>'
+        : '<svg viewBox="0 0 100 100"><use href="#' + (i % 3 ? 'leaf-maple' : 'leaf-oval') + '"/></svg>';
       el.addEventListener('animationend', () => el.remove());
       document.body.appendChild(el);
     }
@@ -824,6 +826,62 @@
       box.appendChild(el);
     }
   }
+
+  /* ---------- Обкладинка й стіл: квіти, нахил, «садок» ---------- */
+  $$('.bouquet .fl').forEach((fl) => {
+    fl.addEventListener('click', (e) => {
+      e.stopPropagation(); // квіти не відкривають книгу
+      fl.classList.remove('is-bloom');
+      void fl.getBoundingClientRect();
+      fl.classList.add('is-bloom');
+      const r = fl.getBoundingClientRect();
+      leafPop(r.left + r.width / 2, r.top + r.height / 2, 10, fl.dataset.petal || '#f2c14e');
+    });
+    fl.addEventListener('animationend', () => fl.classList.remove('is-bloom'));
+  });
+
+  const desk = $('.desk');
+  const garden = $('#garden');
+  let tiltFrame = 0;
+  document.addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse' || reduceMotion.matches) return;
+    cancelAnimationFrame(tiltFrame);
+    tiltFrame = requestAnimationFrame(() => {
+      const nx = e.clientX / window.innerWidth - 0.5;
+      const ny = e.clientY / window.innerHeight - 0.5;
+      desk.style.setProperty('--px', (-nx).toFixed(3));
+      desk.style.setProperty('--py', (-ny).toFixed(3));
+      if (state.page !== 0) return;
+      const r = book.getBoundingClientRect();
+      const bx = clamp((e.clientX - r.left) / r.width, 0, 1);
+      const by = clamp((e.clientY - r.top) / r.height, 0, 1);
+      book.style.setProperty('--ry', ((bx - 0.5) * 7).toFixed(2) + 'deg');
+      book.style.setProperty('--rx', ((0.5 - by) * 5).toFixed(2) + 'deg');
+      book.style.setProperty('--gx', (bx * 100).toFixed(1) + '%');
+      book.style.setProperty('--gy', (by * 100).toFixed(1) + '%');
+    });
+  });
+  document.addEventListener('pointerleave', () => {
+    book.style.setProperty('--rx', '0deg');
+    book.style.setProperty('--ry', '0deg');
+  });
+
+  /* клік по порожньому столу «садить» квітку */
+  const PLANTS = [['fl-chrys', '#f2c14e'], ['fl-chrys', '#fff4dc'], ['fl-chrys', '#e07f30'], ['fl-aster', '#9b6bc4'],
+    ['fl-aster', '#d66a9a'], ['fl-sun', ''], ['fl-rowan', ''], ['leaf-maple', '#c4472d']];
+  $('.stage').addEventListener('click', (e) => {
+    if (e.target.closest('.book') || reduceMotion.matches) return;
+    const [id, color] = PLANTS[Math.floor(Math.random() * PLANTS.length)];
+    const el = document.createElement('div');
+    el.className = 'planted';
+    el.style.cssText = 'left:' + e.clientX + 'px;top:' + e.clientY + 'px;--s:' + rand(46, 84).toFixed(0) + 'px;--r:' +
+      rand(-25, 25).toFixed(0) + 'deg;color:' + (color || 'inherit');
+    el.innerHTML = '<svg viewBox="0 0 100 100"><use href="#' + id + '"/></svg>';
+    el.addEventListener('animationend', (ev) => { if (ev.animationName === 'plant-out') el.remove(); });
+    garden.appendChild(el);
+    while (garden.children.length > 24) garden.firstElementChild.remove();
+    leafPop(e.clientX, e.clientY, 6, color || '#f2c14e');
+  });
 
   /* ---------- Не гасити екран під час показу ---------- */
   let wakeLock = null;
