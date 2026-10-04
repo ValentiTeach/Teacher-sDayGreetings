@@ -10,39 +10,72 @@
     pauseAfterVideo1: 4,     // секунд від кінця 1-го відео до галереї
     pauseAfterGallery: 1.5,  // секунд від кінця галереї до 2-го відео
     pauseAfterVideo2: 4,     // секунд від кінця 2-го відео до сторінки подяки
-    galleryFallback: 181,    // тривалість галереї (с), якщо музика недоступна
+    musicRate: 1.1,          // швидкість пісні (1 — звичайна, 1.1 — на 10 % швидше)
+    musicEnd: 167.5,         // секунда, де в пісні закінчується звук (далі — тиша)
+    galleryFallback: 167.5,  // тривалість галереї (с пісні), якщо музика недоступна
     musicVolume: 0.9,
     flip: 1.1,               // тривалість перегортання сторінки (с)
     flipStagger: 0.22,       // інтервал між аркушами, коли гортаємо кілька сторінок
   };
 
   /* ---------- Вчителі ----------
-     Порядок відповідає номеру фото в папці photo.
-     icons — 1–2 іконки з SVG-спрайта в index.html.
-     Щоб підписати вчителя, додайте name: 'Ім’я По батькові'. */
-  const TEACHERS = [
-    { photo: 'photo/1.jpg',   role: 'Директор ліцею',       icons: ['i-helm', 'i-school'] },
-    { photo: 'photo/2.jpg',   role: 'Класний керівник 5-В', note: 'Історія', icons: ['i-class', 'i-history'] },
-    { photo: 'photo/3.jpg',   role: 'Асистент вчителя',     note: 'Інклюзивне навчання', icons: ['i-care', 'i-together'] },
-    { photo: 'photo/4.png',   role: 'Пізнаємо природу та ЗБД',      icons: ['i-sprout', 'i-magnifier'] },
-    { photo: 'photo/5.jpg',   role: 'Математика',           icons: ['i-math', 'i-compass'] },
-    { photo: 'photo/6.png',   role: 'Польська мова',        icons: ['i-say-pl', 'i-flag-pl'] },
-    { photo: 'photo/7.jpg',   role: 'Польська мова',        icons: ['i-say-pl', 'i-flag-pl'] },
-    { photo: 'photo/8.jpg',   role: 'Фізична культура',     icons: ['i-ball', 'i-stopwatch'] },
-    { photo: 'photo/9.jpeg',  role: 'Українська мова',      icons: ['i-say-ua', 'i-flag-ua'] },
-    { photo: 'photo/10.jpg',  role: 'Українська мова',      icons: ['i-say-ua', 'i-flag-ua'] },
-    { photo: 'photo/11.jpeg', role: 'Англійська мова',      icons: ['i-say-en', 'i-flag-gb'] },
-    { photo: 'photo/12.png',  role: 'Англійська мова',      icons: ['i-say-en', 'i-flag-gb'] },
-    { photo: 'photo/13.jpg',  role: 'Мистецтво',            icons: ['i-palette', 'i-brush'] },
-    { photo: 'photo/14.webp', role: 'Література',           icons: ['i-book', 'i-quill'] },
-    { photo: 'photo/15.jpg',  role: 'Музика',               icons: ['i-note', 'i-piano'] },
-    { photo: 'photo/16.jpg',  role: 'Інформатика',          icons: ['i-laptop', 'i-code'] },
-    { photo: 'photo/17.jpg',  role: 'Інформатика',          icons: ['i-laptop', 'i-code'] },
-    { photo: 'photo/18.jpg',  role: 'Християнська етика',   icons: ['i-candle', 'i-bible'] },
-    { photo: 'photo/19.jpg',  role: 'СЕЕН',                 note: 'соціально-емоційне та етичне навчання', icons: ['i-smile', 'i-heart'] },
-    { photo: 'photo/20.png',  role: 'Трудове навчання',     note: 'технології', icons: ['i-hammer', 'i-gear'] },
-    { photo: 'photo/21.png',  role: 'Трудове навчання',     note: 'технології', icons: ['i-hammer', 'i-gear'] },
+     Кожен запис — «експозиція» одного предмета: 1 або 2 фото (номери файлів у папці photo).
+     icons — 1–2 іконки з SVG-спрайта в index.html (підписи до них — у ICON_TIPS нижче).
+     Щоб підписати вчителів, додайте names: ['Ім’я По батькові', ...] у тому ж порядку, що й photos. */
+  const EXHIBITS = [
+    { subject: 'Директор ліцею',          icons: ['i-helm', 'i-school'],     photos: ['photo/1.jpg'] },
+    { subject: 'Класний керівник 5-В',    note: 'Історія', icons: ['i-class', 'i-history'], photos: ['photo/2.jpg'] },
+    { subject: 'Асистент вчителя',        note: 'Інклюзивне навчання', icons: ['i-care', 'i-together'], photos: ['photo/3.jpg'] },
+    { subject: 'Пізнаємо природу та ЗБД', icons: ['i-sprout', 'i-magnifier'], photos: ['photo/4.png'] },
+    { subject: 'Математика',              icons: ['i-math', 'i-compass'],    photos: ['photo/5.jpg'] },
+    { subject: 'Польська мова',           icons: ['i-say-pl', 'i-flag-pl'],  photos: ['photo/6.png', 'photo/7.jpg'] },
+    { subject: 'Фізична культура',        icons: ['i-ball', 'i-stopwatch'],  photos: ['photo/8.jpg'] },
+    { subject: 'Українська мова',         icons: ['i-say-ua', 'i-flag-ua'],  photos: ['photo/9.jpeg', 'photo/10.jpg'] },
+    { subject: 'Англійська мова',         icons: ['i-say-en', 'i-flag-gb'],  photos: ['photo/11.jpeg', 'photo/12.png'] },
+    { subject: 'Мистецтво',               icons: ['i-palette', 'i-brush'],   photos: ['photo/13.jpg'] },
+    { subject: 'Література',              icons: ['i-book', 'i-quill'],      photos: ['photo/14.webp'] },
+    { subject: 'Музика',                  icons: ['i-note', 'i-piano'],      photos: ['photo/15.jpg'] },
+    { subject: 'Інформатика',             icons: ['i-laptop', 'i-code'],     photos: ['photo/16.jpg', 'photo/17.jpg'] },
+    { subject: 'Християнська етика',      icons: ['i-candle', 'i-bible'],    photos: ['photo/18.jpg'] },
+    { subject: 'СЕЕН',                    note: 'соціально-емоційне та етичне навчання', icons: ['i-smile', 'i-heart'], photos: ['photo/19.jpg'] },
+    { subject: 'Трудове навчання',        note: 'технології', icons: ['i-hammer', 'i-gear'], photos: ['photo/20.png', 'photo/21.png'] },
   ];
+
+  /* Підписи, що з’являються над іконками, та їхні анімації. */
+  const ICON_TIPS = {
+    'i-helm': ['Директор веде наш ліцей уперед', 'spin'],
+    'i-school': ['Наш ліцей — наш другий дім', 'bounce'],
+    'i-class': ['5-В — дружна команда!', 'bounce'],
+    'i-history': ['Історія вчить пам’ятати', 'wiggle'],
+    'i-care': ['Підтримка й турбота щодня', 'beat'],
+    'i-together': ['Разом — кожен важливий', 'bounce'],
+    'i-sprout': ['Усе живе росте — і ми теж', 'grow'],
+    'i-magnifier': ['Досліджуємо світ навколо', 'wiggle'],
+    'i-math': ['Плюс знання, мінус помилки!', 'spin'],
+    'i-compass': ['Точність — понад усе', 'spin'],
+    'i-say-pl': ['Dzień dobry!', 'bounce'],
+    'i-flag-pl': ['Мова наших сусідів', 'wave'],
+    'i-ball': ['Рух — це здоров’я!', 'bounce'],
+    'i-stopwatch': ['На старт, увага, руш!', 'wiggle'],
+    'i-say-ua': ['Рідна мова — наша сила', 'bounce'],
+    'i-flag-ua': ['Синє небо, золоте поле', 'wave'],
+    'i-say-en': ['Hello, teacher!', 'bounce'],
+    'i-flag-gb': ['Англійська відкриває світ', 'wave'],
+    'i-palette': ['Світ у всіх кольорах', 'spin'],
+    'i-brush': ['Кожен мазок — маленьке диво', 'wiggle'],
+    'i-book': ['Книжки — двері в інші світи', 'bounce'],
+    'i-quill': ['Слово має силу', 'wiggle'],
+    'i-note': ['Музика живе в серці', 'bounce'],
+    'i-piano': ['До-ре-мі-фа-соль!', 'wiggle'],
+    'i-laptop': ['Цифровий світ — під контролем', 'bounce'],
+    'i-code': ['print("Дякуємо!")', 'wiggle'],
+    'i-candle': ['Світло добра', 'flicker'],
+    'i-bible': ['Мудрість на кожен день', 'bounce'],
+    'i-smile': ['Розуміємо свої емоції', 'spin'],
+    'i-heart': ['Доброта починається з нас', 'beat'],
+    'i-hammer': ['Робимо своїми руками', 'wiggle'],
+    'i-gear': ['Технології рухають світ', 'spin'],
+  };
 
   const PAGE_LABELS = [
     'Обкладинка',
@@ -277,6 +310,52 @@
     playVideo(v);
   }));
 
+  const LEAF_COLORS = ['#E0A526', '#F2C14E', '#D9772B', '#B4532A', '#C4472D', '#E8B04A', '#A8742A'];
+
+  /* ---------- Листочки-«конфеті» з точки натискання ---------- */
+  function leafPop(x, y, count) {
+    if (reduceMotion.matches) return;
+    for (let i = 0; i < (count || 8); i++) {
+      const el = document.createElement('div');
+      const angle = rand(0, Math.PI * 2);
+      const dist = rand(40, 110);
+      el.className = 'pop-leaf';
+      el.style.cssText = [
+        'left:' + x + 'px',
+        'top:' + y + 'px',
+        '--dx:' + (Math.cos(angle) * dist).toFixed(0) + 'px',
+        '--dy:' + (Math.sin(angle) * dist + 40).toFixed(0) + 'px',
+        '--r:' + rand(-260, 260).toFixed(0) + 'deg',
+        '--s:' + rand(12, 22).toFixed(0) + 'px',
+        'color:' + LEAF_COLORS[i % LEAF_COLORS.length],
+      ].join(';');
+      el.innerHTML = '<svg viewBox="0 0 100 100"><use href="#' + (i % 3 ? 'leaf-maple' : 'leaf-oval') + '"/></svg>';
+      el.addEventListener('animationend', () => el.remove());
+      document.body.appendChild(el);
+    }
+  }
+
+  /* «Оживити» іконку: анімація + підпис-бульбашка */
+  function playIcon(btn, withTip) {
+    btn.classList.remove('is-play');
+    void btn.offsetWidth;
+    btn.classList.add('is-play');
+    if (!withTip) return;
+    const label = btn.closest('.art__label');
+    const bubble = label && $('.art__bubble', label);
+    if (!bubble) return;
+    bubble.textContent = (ICON_TIPS[btn.dataset.icon] || [''])[0];
+    bubble.classList.add('is-on');
+    clearTimeout(bubble._t);
+    bubble._t = setTimeout(() => bubble.classList.remove('is-on'), 2800);
+  }
+
+  function iconButton(id, cls) {
+    const tip = ICON_TIPS[id] || ['', 'wiggle'];
+    return '<button type="button" class="' + cls + '" data-icon="' + id + '" data-anim="' + tip[1] + '" aria-label="' + tip[0] + '">' +
+      '<svg class="ico" aria-hidden="true"><use href="#' + id + '"/></svg></button>';
+  }
+
   /* ---------- Галерея ---------- */
   const gallery = (function () {
     const wall = $('#wall');
@@ -289,8 +368,13 @@
     const btnPause = $('#gPause');
     const btnMute = $('#gMute');
     const hint = $('#gMusicHint');
+    const timetable = $('#timetable');
+    const caption = $('#ttCaption');
+    const captionDefault = caption.textContent;
+    const zoom = $('#zoom');
+    const RAMP = 0.015;
 
-    let t = 0;               // час галереї, с
+    let t = 0;               // позиція в пісні, с
     let last = 0;
     let raf = 0;
     let active = false;      // сторінка галереї відкрита
@@ -301,83 +385,152 @@
     let waitTimer = 0;
     let resynced = false;    // одна спроба підтягнути музику до галереї
     let musicBroken = false;
+    let zoomPaused = false;
     let x0 = 0;
     let x1 = 0;
+    let wallW = 0;
     let progW = 0;
+    let current = -1;
+    let exhibits = [];
+    let centers = [];
+    let chips = [];
+
+    music.defaultPlaybackRate = CONFIG.musicRate;
+    music.preservesPitch = true;
 
     function build() {
       const frag = document.createDocumentFragment();
-      TEACHERS.forEach((teacher) => {
+      EXHIBITS.forEach((ex, index) => {
         const fig = document.createElement('figure');
-        fig.className = 'art';
+        fig.className = 'art' + (ex.photos.length > 1 ? ' art--group' : '');
 
         const lamp = document.createElement('div');
         lamp.className = 'art__lamp';
         lamp.setAttribute('aria-hidden', 'true');
 
-        const frame = document.createElement('div');
-        frame.className = 'art__frame';
-        const mat = document.createElement('div');
-        mat.className = 'art__mat';
-        const img = document.createElement('img');
-        img.className = 'art__img';
-        img.decoding = 'async';
-        img.alt = [teacher.name, teacher.role, teacher.note].filter(Boolean).join(', ');
-        img.addEventListener('load', () => {
-          if (img.naturalWidth && img.naturalHeight) {
-            img.style.aspectRatio = img.naturalWidth + ' / ' + img.naturalHeight;
-            measure();
-          }
+        const frames = document.createElement('div');
+        frames.className = 'art__frames';
+        ex.photos.forEach((src, k) => {
+          const name = ex.names && ex.names[k];
+          const frame = document.createElement('div');
+          frame.className = 'art__frame';
+          const mat = document.createElement('button');
+          mat.type = 'button';
+          mat.className = 'art__mat';
+          mat.setAttribute('aria-label', 'Збільшити фото: ' + (name ? name + ', ' : '') + ex.subject);
+          const img = document.createElement('img');
+          img.className = 'art__img';
+          img.decoding = 'async';
+          img.alt = [name, ex.subject, ex.note].filter(Boolean).join(', ');
+          img.addEventListener('load', () => {
+            if (img.naturalWidth && img.naturalHeight) {
+              img.style.aspectRatio = img.naturalWidth + ' / ' + img.naturalHeight;
+              measure();
+            }
+          });
+          img.addEventListener('error', () => fig.classList.add('is-missing'));
+          img.src = src;
+          mat.addEventListener('click', () => openZoom(img, ex, name));
+          mat.appendChild(img);
+          frame.appendChild(mat);
+          frames.appendChild(frame);
         });
-        img.addEventListener('error', () => fig.classList.add('is-missing'));
-        img.src = teacher.photo;
-        mat.appendChild(img);
-        frame.appendChild(mat);
 
         const label = document.createElement('figcaption');
         label.className = 'art__label';
-        const icons = document.createElement('span');
-        icons.className = 'art__icons';
-        icons.innerHTML = teacher.icons.map((id) =>
-          '<span class="art__icon"><svg class="ico" aria-hidden="true"><use href="#' + id + '"/></svg></span>').join('');
-        label.appendChild(icons);
-        [['art__role', teacher.role], ['art__note', teacher.note], ['art__name', teacher.name]].forEach(([cls, text]) => {
-          if (!text) return;
-          const span = document.createElement('span');
-          span.className = cls;
-          span.textContent = text;
-          label.appendChild(span);
-        });
+        label.innerHTML = '<span class="art__bubble" aria-live="polite"></span><span class="art__icons">' +
+          ex.icons.map((id) => iconButton(id, 'art__icon')).join('') + '</span>';
+        [['art__role', ex.subject], ['art__note', ex.note], ['art__name', ex.names && ex.names.filter(Boolean).join(' · ')]]
+          .forEach(([cls, text]) => {
+            if (!text) return;
+            const span = document.createElement('span');
+            span.className = cls;
+            span.textContent = text;
+            label.appendChild(span);
+          });
 
-        fig.append(lamp, frame, label);
+        fig.append(lamp, frames, label);
         frag.appendChild(fig);
+        exhibits.push(fig);
+
+        /* кнопка в «розкладі» над галереєю */
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'tt';
+        chip.setAttribute('aria-label', ex.subject);
+        chip.innerHTML = '<svg class="ico" aria-hidden="true"><use href="#' + ex.icons[0] + '"/></svg>' +
+          (ex.photos.length > 1 ? '<span class="tt__n">' + ex.photos.length + '</span>' : '');
+        chip.addEventListener('click', () => seekTo(index));
+        chip.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') caption.textContent = ex.subject; });
+        chip.addEventListener('pointerleave', () => { caption.textContent = captionDefault; });
+        chip.addEventListener('focus', () => { caption.textContent = ex.subject; });
+        chip.addEventListener('blur', () => { caption.textContent = captionDefault; });
+        timetable.appendChild(chip);
+        chips.push(chip);
       });
       track.insertBefore(frag, outro);
+
+      track.addEventListener('click', (e) => {
+        const btn = e.target.closest('.art__icon');
+        if (!btn) return;
+        playIcon(btn, true);
+        const r = btn.getBoundingClientRect();
+        leafPop(r.left + r.width / 2, r.top + r.height / 2, 7);
+      });
     }
 
     function duration() {
       const d = music.duration;
-      return Number.isFinite(d) && d > 20 ? d : CONFIG.galleryFallback;
+      return Number.isFinite(d) && d > 20 ? Math.min(d, CONFIG.musicEnd || d) : CONFIG.galleryFallback;
     }
 
     /* рівномірний рух із м’яким розгоном і гальмуванням */
     function travel(p) {
-      const a = 0.025;
-      const v = 1 / (1 - a);
+      const v = 1 / (1 - RAMP);
       if (p <= 0) return 0;
       if (p >= 1) return 1;
-      if (p < a) return (v * p * p) / (2 * a);
-      if (p > 1 - a) return 1 - (v * (1 - p) * (1 - p)) / (2 * a);
-      return v * (a / 2 + (p - a));
+      if (p < RAMP) return (v * p * p) / (2 * RAMP);
+      if (p > 1 - RAMP) return 1 - (v * (1 - p) * (1 - p)) / (2 * RAMP);
+      return v * (RAMP / 2 + (p - RAMP));
+    }
+
+    function untravel(e) {
+      const v = 1 / (1 - RAMP);
+      const edge = (v * RAMP) / 2;
+      if (e <= 0) return 0;
+      if (e >= 1) return 1;
+      if (e < edge) return Math.sqrt((2 * RAMP * e) / v);
+      if (e > 1 - edge) return 1 - Math.sqrt((2 * RAMP * (1 - e)) / v);
+      return e / v + RAMP / 2;
     }
 
     function measure() {
-      const w = wall.clientWidth;
+      wallW = wall.clientWidth;
       const center = (el) => el.offsetLeft + el.offsetWidth / 2;
-      x0 = w / 2 - center(intro);
-      x1 = w / 2 - center(outro);
+      x0 = wallW / 2 - center(intro);
+      x1 = wallW / 2 - center(outro);
+      centers = exhibits.map(center);
       progW = prog.clientWidth;
       render();
+    }
+
+    function setCurrent(i) {
+      if (i === current) return;
+      if (current >= 0) {
+        exhibits[current].classList.remove('is-current');
+        chips[current].classList.remove('is-active');
+      }
+      current = i;
+      if (i < 0) return;
+      exhibits[i].classList.add('is-current');
+      chips[i].classList.add('is-active');
+      if (timetable.scrollWidth > timetable.clientWidth) {
+        timetable.scrollTo({ left: chips[i].offsetLeft - timetable.clientWidth / 2 + chips[i].offsetWidth / 2, behavior: 'smooth' });
+      }
+      /* коли вчитель у центрі — іконки самі «оживають» */
+      if (active && !paused && !done) {
+        $$('.art__icon', exhibits[i]).forEach((btn, k) => setTimeout(() => playIcon(btn, k === 0), 350 + k * 450));
+      }
     }
 
     function render() {
@@ -386,10 +539,20 @@
       track.style.transform = 'translate3d(' + x.toFixed(1) + 'px,0,0)';
       fill.style.transform = 'scaleX(' + p.toFixed(4) + ')';
       pencil.style.transform = 'translate3d(' + (p * progW).toFixed(1) + 'px,-50%,0)';
+      let best = -1;
+      let bestD = wallW * 0.28;
+      centers.forEach((c, i) => {
+        const d = Math.abs(c + x - wallW / 2);
+        if (d < bestD) {
+          bestD = d;
+          best = i;
+        }
+      });
+      setCurrent(best);
     }
 
     function frame(now) {
-      const dt = clamp((now - last) / 1000, 0, 0.25);
+      const dt = clamp((now - last) / 1000, 0, 0.25) * CONFIG.musicRate;
       last = now;
       if (active && !paused && !done && !waitMusic) {
         const playing = musicClock && !music.paused && !music.ended;
@@ -425,11 +588,12 @@
       try {
         if (Math.abs(music.currentTime - t) > 0.3) music.currentTime = t;
       } catch (e) { /* ще немає метаданих */ }
+      music.playbackRate = CONFIG.musicRate;
       music.volume = 0;
       const ok = () => {
         clearTimeout(waitTimer);
         waitMusic = false;
-        if (!active || paused) {
+        if (!active || paused || done) {
           music.pause();
           return;
         }
@@ -471,6 +635,7 @@
     }
 
     function leave() {
+      closeZoom(true);
       active = false;
       musicClock = false;
       waitMusic = false;
@@ -484,7 +649,23 @@
       done = true;
       t = duration();
       render();
+      if (!music.paused) fadeTo(music, 0, CONFIG.pauseAfterGallery * 1000, () => music.pause());
       if (state.page === 2) autoTimer = setTimeout(() => goTo(3), CONFIG.pauseAfterGallery * 1000);
+    }
+
+    /* перейти до вчителя з «розкладу» */
+    function seekTo(i) {
+      if (!active) return;
+      const e = (wallW / 2 - centers[i] - x0) / (x1 - x0);
+      t = untravel(clamp(e, 0, 1)) * duration();
+      try { if (!musicBroken) music.currentTime = t; } catch (err) { /* без перемотування */ }
+      if (done) {
+        clearTimeout(autoTimer);
+        done = false;
+        if (!paused) startMusic();
+      }
+      current = -1;
+      render();
     }
 
     function togglePause() {
@@ -507,8 +688,42 @@
     function reset() {
       t = 0;
       done = false;
+      current = -1;
       render();
     }
+
+    /* збільшене фото */
+    function openZoom(img, ex, name) {
+      $('#zoomImg').src = img.currentSrc || img.src;
+      $('#zoomImg').alt = img.alt;
+      $('#zoomRole').textContent = ex.subject;
+      $('#zoomNote').textContent = [name, ex.note].filter(Boolean).join(' · ');
+      $('#zoomIcons').innerHTML = ex.icons.map((id) => iconButton(id, 'zoom__icon')).join('');
+      zoom.classList.add('is-on');
+      zoomPaused = active && !paused && !done;
+      if (zoomPaused) togglePause();
+      $('.zoom__close', zoom).focus({ preventScroll: true });
+    }
+
+    function closeZoom(silent) {
+      if (!zoom.classList.contains('is-on')) return;
+      zoom.classList.remove('is-on');
+      if (!silent && zoomPaused && paused) togglePause();
+      zoomPaused = false;
+    }
+
+    zoom.addEventListener('click', (e) => {
+      const icon = e.target.closest('.zoom__icon');
+      if (icon) {
+        playIcon(icon, false);
+        $('#zoomTip').textContent = (ICON_TIPS[icon.dataset.icon] || [''])[0];
+        const r = icon.getBoundingClientRect();
+        leafPop(r.left + r.width / 2, r.top + r.height / 2, 8);
+        return;
+      }
+      $('#zoomTip').textContent = '';
+      closeZoom(false);
+    });
 
     music.addEventListener('ended', () => { if (active) finish(); });
     music.addEventListener('error', () => {
@@ -543,10 +758,35 @@
     if ('ResizeObserver' in window) new ResizeObserver(measure).observe(wall);
     else window.addEventListener('resize', measure);
 
-    return { enter, leave, measure, togglePause, toggleMute, reset };
+    return { enter, leave, measure, togglePause, toggleMute, reset, closeZoom };
   })();
 
   /* ---------- Сторінка подяки ---------- */
+  const thanksIcons = $('#thanksIcons');
+  const thanksTip = $('#thanksTip');
+  EXHIBITS.forEach((ex) => {
+    thanksIcons.insertAdjacentHTML('beforeend', iconButton(ex.icons[0], 'thanks__icon'));
+    thanksIcons.lastElementChild.dataset.subject = ex.subject;
+    thanksIcons.lastElementChild.setAttribute('aria-label', ex.subject + ' — дякуємо!');
+  });
+  thanksIcons.addEventListener('click', (e) => {
+    const btn = e.target.closest('.thanks__icon');
+    if (!btn) return;
+    playIcon(btn, false);
+    btn.classList.add('is-thanked');
+    thanksTip.textContent = btn.dataset.subject + ' — дякуємо!';
+    const r = btn.getBoundingClientRect();
+    leafPop(r.left + r.width / 2, r.top + r.height / 2, 9);
+  });
+  $('.grade').addEventListener('click', (e) => {
+    const g = e.currentTarget;
+    g.classList.remove('is-stamp');
+    void g.offsetWidth;
+    g.classList.add('is-stamp');
+    const r = g.getBoundingClientRect();
+    leafPop(r.left + r.width / 2, r.top + r.height / 2, 12);
+  });
+
   function celebrate() {
     if (reduceMotion.matches) return;
     spawnLeaves(26, true);
@@ -562,8 +802,6 @@
   });
 
   /* ---------- Осіннє листя ---------- */
-  const LEAF_COLORS = ['#E0A526', '#F2C14E', '#D9772B', '#B4532A', '#C4472D', '#E8B04A', '#A8742A'];
-
   function spawnLeaves(count, burst) {
     const box = $('#leaves');
     for (let i = 0; i < count; i++) {
@@ -663,6 +901,10 @@
     if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
     const tag = e.target && e.target.tagName;
     if (tag === 'VIDEO' && /^(ArrowLeft|ArrowRight| )$/.test(e.key)) return;
+    if (e.key === 'Escape') {
+      gallery.closeZoom(false);
+      return;
+    }
     switch (e.key) {
       case 'ArrowRight':
       case 'PageDown':
@@ -697,7 +939,7 @@
   let touch = null;
   book.addEventListener('touchstart', (e) => {
     const target = e.target;
-    if (e.touches.length !== 1 || (target.closest && target.closest('video, .gbtns, .note'))) {
+    if (e.touches.length !== 1 || (target.closest && target.closest('video, .gbtns, .note, .timetable, .zoom'))) {
       touch = null;
       return;
     }
